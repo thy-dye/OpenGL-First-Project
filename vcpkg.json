@@ -1,9 +1,21 @@
 {
   "dependencies": [
-    "fmt",
-    "glew",
+    {
+      "name": "glad",
+      "features": [
+        "gl-api-40"
+      ]
+    },
     "glfw3",
-    "imgui",
+    "glm",
+    {
+      "name": "imgui",
+      "features": [
+        "docking-experimental",
+        "glfw-binding",
+        "opengl3-binding"
+      ]
+    },
     "opengl",
     "stb"
   ]
