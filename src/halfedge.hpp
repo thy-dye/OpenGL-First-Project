@@ -5,11 +5,11 @@ public:
   HalfEdge();  
   ~HalfEdge();
 
-  HalfEdge(const HalfEdge& h);  
-  HalfEdge operator=(const HalfEdge& h);  
+  HalfEdge(const HalfEdge& halfedge);  
+  HalfEdge& operator=(const HalfEdge& halfedge);  
 
-  HalfEdge(HalfEdge&& h);
-  HalfEdge operator=(HalfEdge&& h);  
+  HalfEdge(HalfEdge&& halfedge);
+  HalfEdge& operator=(HalfEdge&& halfedge);  
 private:
-    
+
 };
