@@ -3,9 +3,13 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
+
+#define MAJOR 4
+#define MINOR 0
+
 class Window {
 private:    
-    Window(int Major=4, int minor=0, int width, int height);
+    Window(int Major=MAJOR, int minor=MINOR, int width, int height);
     ~Window();
     Window(const Window& window) = delete;
     Window& operator=(const Window& window) = delete; 

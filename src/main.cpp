@@ -1,6 +1,11 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
+// #include "window.hpp"
+
 
 #define MAJOR 4
 #define MINOR 0
@@ -52,6 +57,16 @@ const char *fragmentShaderSource = "#version 400 core\n"
         return 1;
     }   
     
+    //getting dearimgui working
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO();
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init();
+
     //tell opengl how to size its viewport
     glViewport(0, 0, width, height);
     //tell glfw that when we resize the window to call this specific function
@@ -141,6 +156,7 @@ const char *fragmentShaderSource = "#version 400 core\n"
     glBindBuffer(GL_ARRAY_BUFFER, 0); 
     //glBindVertexArray(0); //we can also unbind the VAO but traditionally this is not done
 
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     
     
     //render loop
@@ -157,10 +173,22 @@ const char *fragmentShaderSource = "#version 400 core\n"
         // glDrawArrays(GL_TRIANGLES, 0, 3); //renderes using array of verts (VBO)
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); //renders using indices of the EBO into the VBO
         
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+        ImGui::ShowDemoWindow();
+
+        //render ImGUI
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
     
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
     glfwTerminate();
     return 0;
 }
