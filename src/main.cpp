@@ -108,11 +108,19 @@ const char *fragmentShaderSource = "#version 400 core\n"
     
     //holds data of our vertices
     float vertices[] = {
-       -0.5f, -0.5f, 0.0f,
+        0.5f,  0.5f, 0.0f,
         0.5f, -0.5f, 0.0f,
-        0.0f,  0.5f, 0.0f,
+       -0.5f, -0.5f, 0.0f,
+       -0.5f,  0.5f, 0.0f
     };
 
+    unsigned int indices[] = {
+        0, 1, 3,
+        1, 2, 3
+    };
+    
+    unsigned int EBO;
+    glGenBuffers(1, &EBO);
     unsigned int VBO;
     glGenBuffers(1, &VBO);                                                          //buffer id
 
@@ -121,9 +129,11 @@ const char *fragmentShaderSource = "#version 400 core\n"
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO); 
 
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);                                             //bind buffer to a type  
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);      //use specified type to write our vertices to
-    
+
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);   //tell opengl how to interpret the data
     glEnableVertexAttribArray(0);                                                   //enable the vertex attribute with the location as its argumetn
     
@@ -144,7 +154,8 @@ const char *fragmentShaderSource = "#version 400 core\n"
         //actually use our shader program
         glUseProgram(shaderProgram);
         glBindVertexArray(VAO); //normally there would be more than one VAO so you would bind as needed i think
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        // glDrawArrays(GL_TRIANGLES, 0, 3); //renderes using array of verts (VBO)
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); //renders using indices of the EBO into the VBO
         
         glfwSwapBuffers(window);
         glfwPollEvents();
