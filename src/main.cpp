@@ -4,6 +4,7 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include <cmath>
 // #include "window.hpp"
 
 
@@ -20,12 +21,13 @@ const char *vertexShaderSource = "#version 400 core\n"
     "{\n"
     "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
     "}\0";
-
-const char *fragmentShaderSource = "#version 400 core\n"
+    
+    const char *fragmentShaderSource = "#version 400 core\n"
     "out vec4 FragColor;\n"
+    "uniform vec4 ourColor;"
     "void main()\n"
     "{\n"
-    "   FragColor = vec4(0.0f, 0.2f, 1.0f, 1.0f);\n"
+    "   FragColor = ourColor;\n"
     "}\0";
     
 
@@ -156,7 +158,7 @@ const char *fragmentShaderSource = "#version 400 core\n"
     glBindBuffer(GL_ARRAY_BUFFER, 0); 
     //glBindVertexArray(0); //we can also unbind the VAO but traditionally this is not done
 
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     
     
     //render loop
@@ -168,7 +170,11 @@ const char *fragmentShaderSource = "#version 400 core\n"
         
         //todo fill with rendering functions at a later date
         //actually use our shader program
+        float timeValue = glfwGetTime();
+        float blueValue = (std::sin(timeValue) / 2.0f) + 0.5f;
+        int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
         glUseProgram(shaderProgram);
+        glUniform4f(vertexColorLocation, 0.0f, 0.0f, blueValue, 1.0f);
         glBindVertexArray(VAO); //normally there would be more than one VAO so you would bind as needed i think
         // glDrawArrays(GL_TRIANGLES, 0, 3); //renderes using array of verts (VBO)
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); //renders using indices of the EBO into the VBO
