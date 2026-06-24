@@ -17,14 +17,17 @@ void processInput(GLFWwindow* window);
 //vertex and fragment shader 
 const char *vertexShaderSource = "#version 400 core\n"
     "layout (location = 0) in vec3 aPos;\n"
+    "layout (location = 1) in vec3 aColor;\n"    
+    "out vec4 ourColor;\n"
     "void main()\n"
     "{\n"
     "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+    "   ourColor = vec4(aColor, 1.0);\n"
     "}\0";
     
     const char *fragmentShaderSource = "#version 400 core\n"
     "out vec4 FragColor;\n"
-    "uniform vec4 ourColor;"
+    "in vec4 ourColor;\n"
     "void main()\n"
     "{\n"
     "   FragColor = ourColor;\n"
@@ -125,15 +128,15 @@ const char *vertexShaderSource = "#version 400 core\n"
     
     //holds data of our vertices
     float vertices[] = {
-        0.5f,  0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
-       -0.5f, -0.5f, 0.0f,
-       -0.5f,  0.5f, 0.0f
+        // positions        // colors
+        0.5f, -0.5f, 0.0f,  1.0f,  0.0f, 0.0f,
+       -0.5f, -0.5f, 0.0f,  0.0f,  1.0f, 0.0f,
+        0.0f,  0.5f, 0.0f,  0.0f,  0.0f, 1.0f
     };
 
     unsigned int indices[] = {
-        0, 1, 3,
-        1, 2, 3
+        0, 1, 2 
+        // 1, 2, 3
     };
     
     unsigned int EBO;
@@ -151,8 +154,12 @@ const char *vertexShaderSource = "#version 400 core\n"
     glBindBuffer(GL_ARRAY_BUFFER, VBO);                                             //bind buffer to a type  
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);      //use specified type to write our vertices to
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);   //tell opengl how to interpret the data
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);   //tell opengl how to interpret the data
     glEnableVertexAttribArray(0);                                                   //enable the vertex attribute with the location as its argumetn
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3*sizeof(float)));   
+    glEnableVertexAttribArray(1);
+
     
     //unbind it which we can do safely since glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object
     glBindBuffer(GL_ARRAY_BUFFER, 0); 
@@ -170,14 +177,14 @@ const char *vertexShaderSource = "#version 400 core\n"
         
         //todo fill with rendering functions at a later date
         //actually use our shader program
-        float timeValue = glfwGetTime();
-        float blueValue = (std::sin(timeValue) / 2.0f) + 0.5f;
-        int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
+        // float timeValue = glfwGetTime();
+        // float blueValue = (std::sin(timeValue) / 2.0f) + 0.5f;
+        // int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
         glUseProgram(shaderProgram);
-        glUniform4f(vertexColorLocation, 0.0f, 0.0f, blueValue, 1.0f);
+        // glUniform4f(vertexColorLocation, 0.0f, 0.0f, blueValue, 1.0f);
         glBindVertexArray(VAO); //normally there would be more than one VAO so you would bind as needed i think
         // glDrawArrays(GL_TRIANGLES, 0, 3); //renderes using array of verts (VBO)
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); //renders using indices of the EBO into the VBO
+        glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0); //renders using indices of the EBO into the VBO
         
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
