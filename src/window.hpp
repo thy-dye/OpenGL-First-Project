@@ -20,10 +20,10 @@ public:
     Window(int Major, int minor, int width, int height);
     ~Window();
 
-    Window(const Window& window) = delete;
-    Window& operator=(const Window& window) = delete; 
-    Window(Window&& window) = delete;
-    Window& operator=(Window&& window) = delete; 
+    Window(const Window&) = delete;
+    Window& operator=(const Window&) = delete; 
+    Window(Window&&) = delete;
+    Window& operator=(Window&&) = delete; 
 
     // return a const reference to the current input map
     const std::unordered_map<GLFWinput, bool>& getInputMap() { return inputEvent; }
