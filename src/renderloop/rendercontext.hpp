@@ -10,10 +10,10 @@
 
 class RenderContext
 {
-    RenderContext();
+    RenderContext(Window& window);
     ~RenderContext();
 
-    RenderContext(const RenderContext&) = delete;
+    RenderContext(RenderContext&) = delete;
     RenderContext& operator=(const RenderContext&) = delete; 
     RenderContext(RenderContext&&) = delete;
     RenderContext& operator=(RenderContext&&) = delete; 
@@ -21,7 +21,7 @@ class RenderContext
     void renderLoop();
 
 private:
-    Window window;
+    Window *window;
     //todo these classes
     // std::vector<Shader> shader;
     // std::vector<Object> obj;
