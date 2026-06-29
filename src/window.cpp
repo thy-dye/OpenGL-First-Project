@@ -104,12 +104,12 @@ void Window::clearInputs()
 /* CALLBACK SECTION FOR GLFW */
 
 
-void framebuffer_size_callback([[maybe_unused]] GLFWwindow* window, int width, int height){
+void framebufferSizeCallback([[maybe_unused]] GLFWwindow* window, int width, int height){
     glViewport(0, 0, width, height);
 }
 
 //todo the scroll callback should be for the camera focal length
-void scroll_callback([[maybe_unused]] GLFWwindow* window,[[maybe_unused]] double xoffset,[[maybe_unused]] double yoffset)
+void scrollCallback([[maybe_unused]] GLFWwindow* window,[[maybe_unused]] double xoffset,[[maybe_unused]] double yoffset)
 {
     err::log(LogLevel::INFO, "method not created yet");
 }
