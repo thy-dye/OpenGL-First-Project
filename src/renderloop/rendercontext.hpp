@@ -19,6 +19,7 @@ class RenderContext
     RenderContext& operator=(RenderContext&&) = delete; 
 
     void renderLoop();
+    void render();
 
 private:
     Window *window;

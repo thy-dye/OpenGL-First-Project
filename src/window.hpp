@@ -27,23 +27,22 @@ public:
 
     // return a const reference to the current input map
     const std::unordered_map<GLFWinput, bool>& getInputMap() { return inputEvent; }
+    GLFWwindow* getWindowContext() { return window; }
 
     // member functions
     int addEvent(std::vector<GLFWinput> events);
     int removeEvent(std::vector<GLFWinput> events);
     void processInputs();
+    void swapBuffer();
     bool shouldClose();
+    void clearInputs();
 
 private:
-    void clearInputs();
+    // better for larger datasets so we will leave as is for now but has worse cache locality
     std::unordered_map<GLFWinput, bool> inputEvent;
-    GLFWwindow* window;
+    GLFWwindow *window;
 };
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height){
     glViewport(0, 0, width, height);
 }
-
-// void processInput(GLFWwindow* window) {
-//     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) { glfwSetWindowShouldClose(window, true); }
-// }

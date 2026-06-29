@@ -37,6 +37,7 @@ Window::Window(int major=4, int minor=0, int width, int height)
     //initialize dear imgui
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
+    //todo enable more flags ifykyk
     int flags = ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavEnableGamepad | ImGuiConfigFlags_DockingEnable;
     io.ConfigFlags |= flags;
 
@@ -76,12 +77,14 @@ void Window::processInputs()
     for (auto iter = inputEvent.begin(); iter != inputEvent.end(); ++iter)
     {
         if (glfwGetKey(window, iter->first) == GLFW_PRESS) { iter->second = true; }
+        else { iter->second = false; }
     }
 }
 
+void Window::swapBuffer() { glfwSwapBuffers(window); }
+
 bool Window::shouldClose() { return glfwWindowShouldClose(window); }
 
-//private functions
 void Window::clearInputs() 
 {
     for (auto iter = inputEvent.begin(); iter != inputEvent.end(); ++iter)
