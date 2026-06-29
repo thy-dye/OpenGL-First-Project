@@ -1,4 +1,4 @@
-#pragma WINDOW_HPP
+#pragma once
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <unordered_map>
@@ -17,7 +17,7 @@ using GLFWinput = int;
 class Window {
 public:
     // Initialization function    
-    Window(int Major, int minor, int width, int height);
+    Window(int width, int height, int Major, int minor);
     ~Window();
 
     Window(const Window&) = delete;
@@ -30,11 +30,12 @@ public:
     GLFWwindow* getWindowContext() { return window; }
 
     // member functions
-    int addEvent(std::vector<GLFWinput> events);
-    int removeEvent(std::vector<GLFWinput> events);
+    void swapBuffer() { glfwSwapBuffers(window); }
+    bool shouldClose() { return glfwWindowShouldClose(window); }
+    int addInput(std::vector<GLFWinput> input);
+    int removeInput(std::vector<GLFWinput> input);
     void processInputs();
-    void swapBuffer();
-    bool shouldClose();
+    void processMouse();
     void clearInputs();
 
 private:
@@ -43,6 +44,7 @@ private:
     GLFWwindow *window;
 };
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height){
-    glViewport(0, 0, width, height);
-}
+
+//call backs for glfw defined in window.cpp
+void framebufferSizeCallback(GLFWwindow* window, int width, int height);
+void scrollCallback(GLFWwindow* window, double xoffset, double yoffset);

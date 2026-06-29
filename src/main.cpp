@@ -1,6 +1,5 @@
 #include "window.hpp"
 #include "renderloop/rendercontext.hpp"
-#include "all.hpp"
 
 //vertex and fragment shader 
 const char *vertexShaderSource = "#version 400 core\n"
@@ -24,7 +23,7 @@ const char *vertexShaderSource = "#version 400 core\n"
 
     int main()
 {
-    Window w{MAJOR, MINOR, WIDTH, HEIGHT};
+    Window w{WIDTH, HEIGHT, MAJOR, MINOR};
     RenderContext RomanCancel{w};
     RomanCancel.renderLoop();
 }

@@ -16,7 +16,14 @@ void RenderContext::renderLoop()
 {
     while(window->shouldClose()) 
     {
-        window->processInputs();
+        if (!ImGui::GetIO().WantCaptureKeyboard) { 
+            window->processInputs(); 
+        }
+
+        if (!ImGui::GetIO().WantCaptureMouse) { 
+            window->processMouse();
+        }
+
         
         glfwPollEvents();
         render();
@@ -40,7 +47,7 @@ void RenderContext::render()
     // glDrawArrays(GL_TRIANGLES, 0, 3); //renderes using array of verts (VBO)
     // glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0); //renders using indices of the EBO into the VBO
     
-    //imgui rendering
+    //imgui ui
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
