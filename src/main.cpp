@@ -21,7 +21,7 @@ const char *vertexShaderSource = "#version 400 core\n"
     "}\0";
     
 
-    int main()
+int main()
 {
     Window w{WIDTH, HEIGHT, MAJOR, MINOR};
     RenderContext RomanCancel{w};

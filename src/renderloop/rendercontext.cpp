@@ -14,7 +14,8 @@ RenderContext::~RenderContext()
 //main render loop
 void RenderContext::renderLoop()
 {
-    while(window->shouldClose()) 
+    //ERROR IS RIGHT HERE SEEMINGLY
+    while(!window->shouldClose()) 
     {
         if (!ImGui::GetIO().WantCaptureKeyboard) { 
             window->processInputs(); 
