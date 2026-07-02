@@ -3,6 +3,8 @@
 RenderContext::RenderContext(Window& window) 
 {
     this->window = &window;
+    std::vector v = {GLFW_KEY_ESCAPE};
+    window.addInput(v);
 }
 
 //todo as we continually update this class
@@ -18,14 +20,15 @@ void RenderContext::renderLoop()
     while(!window->shouldClose()) 
     {
         if (!ImGui::GetIO().WantCaptureKeyboard) { 
-            window->processInputs(); 
+            window->processInputs();
         }
 
         if (!ImGui::GetIO().WantCaptureMouse) { 
             window->processMouse();
         }
 
-        
+        auto map = window->getInputMap();
+        if (map[GLFW_KEY_ESCAPE]) { window->setClose(); }
         glfwPollEvents();
         render();
     }

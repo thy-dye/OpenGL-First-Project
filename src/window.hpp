@@ -12,7 +12,9 @@
 
 using GLFWinput = int;
 
-/*
+/*Window Class
+Member Objects:
+map - Map for desired inputs to check
 */
 class Window {
 public:
@@ -27,11 +29,12 @@ public:
 
     // return a const reference to the current input map
     const std::unordered_map<GLFWinput, bool>& getInputMap() { return inputEvent; }
-    GLFWwindow* getWindowContext() { return window; }
-
+    
     // member functions
+    GLFWwindow* getWindowContext() { return window; }
     void swapBuffer() { glfwSwapBuffers(window); }
     bool shouldClose() { return glfwWindowShouldClose(window); }
+    void setClose() { glfwSetWindowShouldClose(window, GLFW_TRUE); }
     int addInput(std::vector<GLFWinput> input);
     int removeInput(std::vector<GLFWinput> input);
     void processInputs();
@@ -48,3 +51,4 @@ private:
 //call backs for glfw defined in window.cpp
 void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 void scrollCallback(GLFWwindow* window, double xoffset, double yoffset);
+//glfwSetWindowCloseCallback() //may be needed in the future
