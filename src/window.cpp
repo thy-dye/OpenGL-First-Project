@@ -32,7 +32,7 @@ Window::Window(int width, int height, int major=4, int minor=0)
     glViewport(0, 0, width, height);
     //tell glfw that when we resize the window to call this specific function
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
-    glfwSetScrollCallback(window, scrollCallback);
+    // glfwSetScrollCallback(window, scrollCallback);   //add back in when doing the camera
     glfwSetWindowSizeLimits(window, WIDTH, HEIGHT, GLFW_DONT_CARE, GLFW_DONT_CARE);
 
     //initialize dear imgui
@@ -109,7 +109,7 @@ void framebufferSizeCallback([[maybe_unused]] GLFWwindow* window, int width, int
 }
 
 //todo the scroll callback should be for the camera focal length
-void scrollCallback([[maybe_unused]] GLFWwindow* window,[[maybe_unused]] double xoffset,[[maybe_unused]] double yoffset)
-{
-    err::log(LogLevel::INFO, "method not created yet");
-}
+// void scrollCallback([[maybe_unused]] GLFWwindow* window,[[maybe_unused]] double xoffset,[[maybe_unused]] double yoffset)
+// {
+//     err::log(LogLevel::INFO, "method not created yet");
+// }

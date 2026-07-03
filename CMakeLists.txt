@@ -8,8 +8,8 @@ find_package(Stb REQUIRED)
 find_package(glad CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 
-
-add_executable(${CMAKE_PROJECT_NAME} WIN32 
+#when you have a proper debugging add back WIN32 as a parameter
+add_executable(${CMAKE_PROJECT_NAME} 
 src/main.cpp
 src/window.cpp
 src/renderloop/rendercontext.cpp

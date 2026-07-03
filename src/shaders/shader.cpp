@@ -1,4 +1,4 @@
-#include "shader.hpp"
+  #include "shader.hpp"
 
 Shader::Shader(const char* vertexPath, const char* fragmentPath) {
     std::string vertCode;
@@ -74,49 +74,32 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath) {
     glDeleteShader(fragmentShader);
 }
 
+Shader::Shader(const char* vertexPath, const char* geometryPath, const char* fragmentPath)
+{
+
+}
+Shader::Shader(const char* vertexPath, const char* tessellationPath,  const char* geometryPath, const char* fragmentPath)
+{
+
+}
+
+//private helper function for initialization
+void Shader::createShader()
+{
+
+}
+
 // activate shader
-void Shader::use() 
-{
-    glUseProgram(ID);
-}
-
-void Shader::addGeometryShader() 
-{
-
-}
-
-void Shader::addComputeShader() 
+void Shader::use() { glUseProgram(ID); }
+void Shader::reloadShader() 
 {
 
 }
 
 // utility uniform functions
-void Shader::setBool(const std::string &name, bool value) const 
-{
-    
-}
-
-void Shader::setInt(const std::string &name, int value) const 
-{
-    
-}
-
-void Shader::setFloat(const std::string &name, float value) const 
-{
-    
-}
-
-void Shader::setVec4(const std::string &name, float value) const 
-{
-    
-}
-
-void Shader::setVec3(const std::string &name, float value) const 
-{
-    
-}
-
-void Shader::setVec2(const std::string &name, float value) const 
-{
-    
-}
+void Shader::setBool(const std::string &name, bool value) const                                 { glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value); }
+void Shader::setInt(const std::string &name, int value) const                                   { glUniform1i(glGetUniformLocation(ID, name.c_str()), value); }
+void Shader::setFloat(const std::string &name, float value) const                               { glUniform1f(glGetUniformLocation(ID, name.c_str()), value); }
+void Shader::setVec4(const std::string &name, float v1, float v2, float v3, float v4) const     { glUniform4f(glGetUniformLocation(ID, name.c_str()), v1, v2, v3, v4); }
+void Shader::setVec3(const std::string &name, float v1, float v2, float v3) const               { glUniform3f(glGetUniformLocation(ID, name.c_str()), v1, v2, v3); }
+void Shader::setVec2(const std::string &name, float v1, float v2) const                         { glUniform2f(glGetUniformLocation(ID, name.c_str()), v1, v2); }

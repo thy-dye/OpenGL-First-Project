@@ -39,7 +39,6 @@ void RenderContext::render()
     //opengl rendering
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-    
     //todo fill with rendering functions at a later date using inputs, mesh, and a shader class
     //actually use our shader program
     // float timeValue = glfwGetTime();
