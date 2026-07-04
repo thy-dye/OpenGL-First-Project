@@ -18,8 +18,9 @@ map - Map for desired inputs to check
 */
 class Window {
 public:
-    // Initialization function    
+    // Constructor   
     Window(int width, int height, int Major, int minor);
+    // Destructor
     ~Window();
 
     Window(const Window&) = delete;

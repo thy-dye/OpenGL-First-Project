@@ -5,7 +5,7 @@
 #include <vector>
 #include <stdexcept>
 #include "../all.hpp"
-#include "../window.hpp"
+#include "../window/window.hpp"
 
 
 class RenderContext
