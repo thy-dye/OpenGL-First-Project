@@ -4,23 +4,32 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
-#include "error.hpp"
+#include "../error.hpp"
+
+enum ShaderType
+{
+    VERTEX_SHADER,
+    TESSELLATION_SHADER_1,
+    TESSELLATION_SHADER_2,
+    GEOMETRY_SHADER,
+    FRAGMENT_SHADER
+};
 
 class Shader 
 {
 public:
 
 //create a shader
+Shader();
 Shader(const char *vertexPath, const char *fragmentPath);
-Shader(const char *vertexPath, const char *geometryPath, const char *fragmentPath);
-Shader(const char *vertexPath, const char *tessellationPath,  const char *geometryPath, const char *fragmentPath);
+Shader(const char *vertexPath, const char *fragmentPath, const char *geometryPath);
 ~Shader();
 // copy assignment
 Shader(const Shader& s) = delete;
 Shader operator=(const Shader& s) = delete;
 //move assignment 
 Shader(Shader&& s);
-Shader operator=(Shader&& s);
+Shader& operator=(Shader&& s);
 
 //activate shader
 void use() { glUseProgram(ID); }
@@ -34,16 +43,19 @@ void setVec4(const std::string &name, float v1, float v2, float v3, float v4) co
 void setVec3(const std::string &name, float v1, float v2, float v3) const;
 void setVec2(const std::string &name, float v1, float v2) const;
 
+// std::ifstream tessFile; //here for future creep scope? THIS WILL BECOME AN ARRAY IN THE FUTURE BRUH
 int success;
-std::ifstream vertFile;
-std::ifstream geoFile;
-std::ifstream fragFile;
-// std::ifstream tessFile; //here for future creep scope?
 
 private:
 
-unsigned int ID;
+void loadShader(const char* shader, int shadertype);
 void createShader();
+
+std::ifstream vertFile;
+std::ifstream geoFile;
+std::ifstream fragFile;
+
+unsigned int ID;
 const char *vPath = nullptr;
 const char *gPath = nullptr;
 const char *fPath = nullptr;

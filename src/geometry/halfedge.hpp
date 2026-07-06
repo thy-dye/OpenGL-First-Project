@@ -1,19 +1,7 @@
-#pragma HALFEDGE
+#pragma once
 
-class HalfEdge {
-public:
-  HalfEdge();  
-  ~HalfEdge();
-
-  HalfEdge(const HalfEdge& halfedge);  
-  HalfEdge& operator=(const HalfEdge& halfedge);  
-
-  HalfEdge(HalfEdge&& halfedge);
-  HalfEdge& operator=(HalfEdge&& halfedge);  
-private:
-
-};
-
-class transform 
-{
+struct Mesh {
+  unsigned int VAO;
+  unsigned int VBO;
+  unsigned int EBO;
 };
