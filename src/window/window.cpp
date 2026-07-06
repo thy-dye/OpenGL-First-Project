@@ -89,7 +89,7 @@ void Window::processInputs()
 //todo
 void Window::processMouse() 
 {
-    err::log(LogLevel::INFO, "method not created yet");
+    // err::log(LogLevel::INFO, "method not created yet");
 }
 
 void Window::clearInputs() 
