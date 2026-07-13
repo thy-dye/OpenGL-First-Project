@@ -47,8 +47,8 @@ void RenderContext::render()
     for (int i = 0; i < static_cast<int>(objects.size()); ++i)
     {
         objects[i]->look->s->use();
-        glBindVertexArray(objects[i]->shape->VAO); 
-        glDrawArrays(GL_TRIANGLES, 0, 3); //renderes using array of verts (VBO)
+        glBindVertexArray(objects[i]->shape->VAO);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); //renderes using array of indices (EBO)
     }
     
     //imgui ui

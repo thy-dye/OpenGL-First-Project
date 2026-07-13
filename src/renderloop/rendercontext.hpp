@@ -22,8 +22,11 @@ public:
 
     void addObject(Object& o);
     void renderLoop();
-    
-private:
+
+//getter functions if i have more internal variables
+    double deltaTime() { return delta_t; };
+
+    private:
     void render();
     Window *window;
     std::vector<Object*> objects;
