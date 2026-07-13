@@ -7,6 +7,7 @@
 #include "../all.hpp"
 #include "../window/window.hpp"
 #include "../geometry/object.hpp"
+#include "../camera/camera.hpp"
 
 class RenderContext
 {
@@ -21,12 +22,12 @@ public:
 
     void addObject(Object& o);
     void renderLoop();
-    void render();
-
+    
 private:
+    void render();
     Window *window;
     std::vector<Object*> objects;
-    //todo these classes
-    // std::vector<Object> obj;
-    // Camera camera
+    Camera camera;
+    double lastFrameTime = 0, 
+           delta_t = 0;
 };

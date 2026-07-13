@@ -17,9 +17,10 @@ int main()
     //this will eventually be the mesh class and an object class 
     float vertices[] = {
         // positions         // colors
-        0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
-        -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
-        0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // top 
+        -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   
+         0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,    
+         0.5f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f,
+        -0.5f,  0.5f, 0.0f,  1.0f, 0.0f, 1.0f,
     };    
     [[maybe_unused]]
     unsigned int indices[] = {  // note that we start from 0!
@@ -27,7 +28,7 @@ int main()
         1, 2, 3    // second triangle
     };  
     
-    unsigned int VBO, VAO;
+    unsigned int VBO, VAO, EBO;
     glGenBuffers(1, &VBO); 
     glGenVertexArrays(1, &VAO);
     

@@ -16,7 +16,10 @@ RenderContext::~RenderContext()
 //main render loop
 void RenderContext::renderLoop()
 {
-    //ERROR IS RIGHT HERE SEEMINGLY
+    // helper variables for time
+    delta_t = glfwGetTime() - lastFrameTime;
+    lastFrameTime = glfwGetTime();
+
     while(!window->shouldClose()) 
     {
         if (!ImGui::GetIO().WantCaptureKeyboard) { 

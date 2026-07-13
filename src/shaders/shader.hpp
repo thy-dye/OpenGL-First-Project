@@ -4,6 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <glm/glm.hpp>
 #include "../error.hpp"
 
 enum ShaderType
@@ -42,6 +43,9 @@ void setFloat(const std::string &name, float value) const;
 void setVec4(const std::string &name, float v1, float v2, float v3, float v4) const;
 void setVec3(const std::string &name, float v1, float v2, float v3) const;
 void setVec2(const std::string &name, float v1, float v2) const;
+void setMat4(const std::string &name, const glm::mat4& M) const;
+void setMat3(const std::string &name, const glm::mat3& M) const;
+void setMat2(const std::string &name, const glm::mat2& M) const;
 
 // std::ifstream tessFile; //here for future creep scope? THIS WILL BECOME AN ARRAY IN THE FUTURE BRUH
 int success;
@@ -61,4 +65,4 @@ const char *gPath = nullptr;
 const char *fPath = nullptr;
 };
 
-// for future maybe add opengl 4.3 to add compute shaders
+// for future maybe add opengl 4.3 to add compute shaders and textures support

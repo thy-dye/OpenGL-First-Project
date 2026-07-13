@@ -51,6 +51,9 @@ void Shader::setFloat(const std::string &name, float value) const               
 void Shader::setVec4(const std::string &name, float v1, float v2, float v3, float v4) const     { glUniform4f(glGetUniformLocation(ID, name.c_str()), v1, v2, v3, v4); }
 void Shader::setVec3(const std::string &name, float v1, float v2, float v3) const               { glUniform3f(glGetUniformLocation(ID, name.c_str()), v1, v2, v3); }
 void Shader::setVec2(const std::string &name, float v1, float v2) const                         { glUniform2f(glGetUniformLocation(ID, name.c_str()), v1, v2); }
+void Shader::setMat4(const std::string &name, const glm::mat4& M)  const                        { glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, false, &M[0][0]); } // must be in column major order
+void Shader::setMat3(const std::string &name, const glm::mat3& M)  const                        { glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, false, &M[0][0]); } // couldve also used glm::value_ptr()
+void Shader::setMat2(const std::string &name, const glm::mat2& M)  const                        { glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, false, &M[0][0]); }
 
 //private helper functions
 /**
