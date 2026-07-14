@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <stdexcept>
+#include <glm/glm.hpp>
 #include "../all.hpp"
 #include "../window/window.hpp"
 #include "../geometry/object.hpp"
