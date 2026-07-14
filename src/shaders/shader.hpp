@@ -47,6 +47,8 @@ void setMat4(const std::string &name, const glm::mat4& M) const;
 void setMat3(const std::string &name, const glm::mat3& M) const;
 void setMat2(const std::string &name, const glm::mat2& M) const;
 
+//getter function
+unsigned int getID() { return ID; }
 // std::ifstream tessFile; //here for future creep scope? THIS WILL BECOME AN ARRAY IN THE FUTURE BRUH
 int success;
 

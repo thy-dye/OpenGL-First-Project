@@ -16,6 +16,7 @@ inline const glm::vec3& getTranslation() { return translation; }
 inline const glm::quat& getRotation()    { return rotation; }
 inline const glm::vec3& getScale()       { return scale; }
 
+glm::vec3 origin;
 glm::vec3 translation;
 glm::quat rotation;
 glm::vec3 scale;

@@ -6,7 +6,9 @@
 #include "error.hpp"
 #include "geometry/halfedge.hpp"
 #include "shaders/material.hpp"
-
+#include <glm/gtc/type_ptr.hpp>
+#define GLM_ENABLE_EXPERIMENTAL 
+#include <glm/gtx/string_cast.hpp>
 #define SHADER_PATH "C:/Users/Ty/Downloads/GitHub/OpenGL-First-Project/src/shaders/"
 
 int main()
@@ -61,6 +63,31 @@ int main()
     Material l;
     l.s = &s;
     o.look = &l;
+
+    s.use();
+    //model matrix
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+    //view matrix
+    glm::mat4 view = glm::mat4(1.0f);
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+
+    // projections
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+
+    //send it to the shader but should be implemented in the render loop eventually 
+    int modelLoc = glGetUniformLocation(s.getID(), "model");
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+    modelLoc = glGetUniformLocation(s.getID(), "view");
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(view));
+    modelLoc = glGetUniformLocation(s.getID(), "projection");
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(projection));
+
+    std::cout << glm::to_string(model) << std::endl;
+    std::cout << glm::to_string(view) << std::endl;
+    std::cout << glm::to_string(projection) << std::endl;
+
     RomanCancel.addObject(o);
     RomanCancel.renderLoop();
 }

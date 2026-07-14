@@ -42,16 +42,15 @@ void RenderContext::render()
     //opengl rendering
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-    //todo fill with rendering functions at a later date using inputs, mesh, and a shader class
 
     for (int i = 0; i < static_cast<int>(objects.size()); ++i)
     {
         objects[i]->look->s->use();
         glBindVertexArray(objects[i]->shape->VAO);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); //renderes using array of indices (EBO)
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); //renders using array of indices (EBO)
     }
     
-    //imgui ui
+    //imgui ui demo
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
