@@ -10,6 +10,9 @@
 #include "../geometry/object.hpp"
 #include "../camera/camera.hpp"
 
+enum RenderContextState { WORLDSPACE, OBJECTSPACE };
+typedef int ContextState;
+
 class RenderContext
 {
 public:
@@ -21,17 +24,20 @@ public:
     RenderContext(RenderContext&&) = delete;
     RenderContext& operator=(RenderContext&&) = delete; 
 
+    //may need to add objects in such a way to utilize unique_ptr
     void addObject(Object& o);
     void renderLoop();
 
 //getter functions if i have more internal variables
     double deltaTime() { return delta_t; };
 
-    private:
+private:
     void render();
     Window *window;
     std::vector<Object*> objects;
     Camera camera;
     double lastFrameTime = 0, 
            delta_t = 0;
+    ContextState state = WORLDSPACE;
+
 };
