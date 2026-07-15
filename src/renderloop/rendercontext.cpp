@@ -1,6 +1,6 @@
 #include "rendercontext.hpp"
 
-RenderContext::RenderContext(Window& window) 
+RenderContext::RenderContext(Window& window, Camera& camera) : camera{camera} 
 {
     this->window = &window;
     std::vector v = {GLFW_KEY_ESCAPE};
@@ -53,8 +53,7 @@ void RenderContext::render()
         model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
 
         //view matrix
-        glm::mat4 view = glm::mat4(1.0f);
-        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+        glm::mat4 view = camera.lookAt();
 
         // projections
         glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);

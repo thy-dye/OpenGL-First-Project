@@ -15,6 +15,7 @@ src/window/window.cpp
 src/renderloop/rendercontext.cpp
 src/error.cpp
 src/shaders/shader.cpp
+src/camera/camera.cpp
 
 )
 

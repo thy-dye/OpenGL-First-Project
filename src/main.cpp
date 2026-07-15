@@ -86,7 +86,8 @@ float vertices[] = {
     std::string vert{Path + "main.vert"};
     std::string frag{Path + "main.frag"};
     Shader s(vert.c_str(), frag.c_str());
-    RenderContext RomanCancel{w};
+    Camera c{glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)};
+    RenderContext RomanCancel{w, c};
     
     Object o;
     Mesh m;

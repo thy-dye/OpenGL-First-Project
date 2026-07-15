@@ -11,12 +11,11 @@
 #include "../camera/camera.hpp"
 
 enum RenderContextState { WORLDSPACE, OBJECTSPACE };
-typedef int ContextState;
 
 class RenderContext
 {
 public:
-    RenderContext(Window& window);
+    RenderContext(Window& window, Camera& camera);
     ~RenderContext();
 
     RenderContext(RenderContext&) = delete;
@@ -29,7 +28,9 @@ public:
     void renderLoop();
 
 //getter functions if i have more internal variables
-    double deltaTime() { return delta_t; };
+    double deltaTime()               { return delta_t; };
+    RenderContextState getState()    { return contextState; }
+    CameraMode getCameraMode()       { return cameraMode; }
 
 private:
     void render();
@@ -38,6 +39,8 @@ private:
     Camera camera;
     double lastFrameTime = 0, 
            delta_t = 0;
-    ContextState state = WORLDSPACE;
+    
+    RenderContextState contextState = WORLDSPACE;
+    CameraMode cameraMode = FLYMODE;
 
 };
