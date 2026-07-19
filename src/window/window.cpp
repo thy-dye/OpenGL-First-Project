@@ -47,8 +47,8 @@ Window::Window(int width, int height, int major=4, int minor=0)
     //initialize dear imgui
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
-    //todo enable more flags ifykyk
-    int flags = ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavEnableGamepad | ImGuiConfigFlags_DockingEnable;
+    int flags = ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavEnableGamepad | 
+                ImGuiConfigFlags_ViewportsEnable | ImGuiConfigFlags_DockingEnable;
     io.ConfigFlags |= flags;
 
     ImGui_ImplGlfw_InitForOpenGL(window, true);
@@ -121,8 +121,8 @@ void Window::framebufferSizeCallback([[maybe_unused]] GLFWwindow* window, int wi
 //called when any button is pressed or released
 void Window::processModifiers([[maybe_unused]] GLFWwindow* window, [[maybe_unused]] int key, [[maybe_unused]] int scancode, int action, int mods)
 {
-    if (mods > 0 && action == GLFW_PRESS)       { Window::inputModifiersEvent |= mods; }
-    else { Window::inputModifiersEvent = 0;}
+    if (mods > 0 && action == GLFW_PRESS) { Window::inputModifiersEvent |= mods; }
+    else                                  { Window::inputModifiersEvent = 0; }
 }
 
 //todo the scroll callback should be for the camera focal length

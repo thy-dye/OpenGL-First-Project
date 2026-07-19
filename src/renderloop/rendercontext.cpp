@@ -96,6 +96,15 @@ void RenderContext::render()
     ImGui::ShowDemoWindow();
     
     ImGui::Render();
+    ImGuiIO& io = ImGui::GetIO();
+    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    {
+        // we HAVE to reset the glfw context idk why but we have to
+        GLFWwindow* backup_current_context = glfwGetCurrentContext();
+        ImGui::UpdatePlatformWindows();
+        ImGui::RenderPlatformWindowsDefault();
+        glfwMakeContextCurrent(backup_current_context);
+    }
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     
     window->swapBuffer();
