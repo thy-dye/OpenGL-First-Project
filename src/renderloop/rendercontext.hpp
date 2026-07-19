@@ -44,3 +44,4 @@ private:
     CameraMode cameraMode = FLYMODE;
 
 };
+//todo add a sleep functionality and a framerate cap

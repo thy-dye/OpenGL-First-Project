@@ -3,13 +3,14 @@
 #include <glm/gtc/matrix_transform.hpp>   
 
 enum CameraMode { FLYMODE, EDITINGMODE };
+enum PerspectiveMode { PERSPECTIVE, ORTHOGRAPHIC };
 
 class Camera 
 {
 public:
     // Constructors
-    Camera(const glm::vec3& origin=glm::vec3(1.0f,0.0f,0.0f));
-    Camera(const glm::vec3& origin, const glm::vec3& forward, const glm::vec3& up);
+    Camera(const glm::vec3& origin=glm::vec3(1.0f,0.0f,0.0f), int hfov=90);
+    Camera(const glm::vec3& origin, const glm::vec3& forward, const glm::vec3& up, int hfov=90);
     
     // Copy constructor and assignment
     Camera(const Camera& c) = default;
@@ -35,4 +36,5 @@ private:
     glm::vec3 origin;
     glm::vec3 forward;
     glm::vec3 up;
+    int hfov;
 };

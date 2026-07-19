@@ -1,6 +1,12 @@
 #include "window.hpp"
 
-//constructor
+// defining the static variable
+int Window::inputModifiersEvent = 0;
+
+/****************************************************************************
+Constructors and Destructor
+*****************************************************************************
+*/
 Window::Window(int width, int height, int major=4, int minor=0)
 {
     // initialize glfw
@@ -30,10 +36,13 @@ Window::Window(int width, int height, int major=4, int minor=0)
     
     //tell opengl how to size its viewport
     glViewport(0, 0, width, height);
-    //tell glfw that when we resize the window to call this specific function
+    // glfw callbacks
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
-    // glfwSetScrollCallback(window, scrollCallback);   //add back in when doing the camera
     glfwSetWindowSizeLimits(window, WIDTH, HEIGHT, GLFW_DONT_CARE, GLFW_DONT_CARE);
+    glfwSetKeyCallback(window, processModifiers);
+    // pollable state of a key will remain GLFW_PRESS until the state of that key is polled with glfwGetKey
+    // glfwSetInputMode(window, GLFW_STICKY_KEYS, GLFW_TRUE); // if you are going to use sticky keys might need to look into how to have a focused and unfocused window
+    //TODO ADD SCROLL AND MOUSE
 
     //initialize dear imgui
     ImGui::CreateContext();
@@ -46,7 +55,6 @@ Window::Window(int width, int height, int major=4, int minor=0)
     ImGui_ImplOpenGL3_Init();
 }
 
-// destructor
 Window::~Window() 
 {
     ImGui_ImplOpenGL3_Shutdown();
@@ -55,10 +63,12 @@ Window::~Window()
     glfwTerminate();
 }
 
-// member functions
+/****************************************************************************
+Member Functions
+*****************************************************************************
+*/
 
-//for the add and remove unsure if they would crash would need to look more into
-//that and figure out how to prevent it from crashing
+// add and remove to the input map
 int Window::addInput(std::vector<GLFWinput> input) 
 {
     for (int i = 0; i < static_cast<int>(input.size()); ++i) 
@@ -77,7 +87,7 @@ int Window::removeInput(std::vector<GLFWinput> input)
     return 0;
 }
 
-//read into glfw mods
+// Process various inputs
 void Window::processInputs() 
 {
     for (auto iter = inputEvent.begin(); iter != inputEvent.end(); ++iter)
@@ -86,12 +96,6 @@ void Window::processInputs()
         else { iter->second = false; }
     }
 }
-//todo
-void Window::processMouse() 
-{
-    // err::log(LogLevel::INFO, "method not created yet");
-}
-
 void Window::clearInputs() 
 {
     for (auto iter = inputEvent.begin(); iter != inputEvent.end(); ++iter)
@@ -99,17 +103,30 @@ void Window::clearInputs()
         iter->second = false;
     }
 }
+//todo
+void Window::processMouse() 
+{
+    // err::log(LogLevel::INFO, "method not created yet");
+}
 
 
 /* CALLBACK SECTION FOR GLFW */
 
-
-void framebufferSizeCallback([[maybe_unused]] GLFWwindow* window, int width, int height){
+// called when the window changes size
+void Window::framebufferSizeCallback([[maybe_unused]] GLFWwindow* window, int width, int height)
+{
     glViewport(0, 0, width, height);
 }
 
+//called when any button is pressed or released
+void Window::processModifiers([[maybe_unused]] GLFWwindow* window, [[maybe_unused]] int key, [[maybe_unused]] int scancode, int action, int mods)
+{
+    if (mods > 0 && action == GLFW_PRESS)       { Window::inputModifiersEvent |= mods; }
+    else { Window::inputModifiersEvent = 0;}
+}
+
 //todo the scroll callback should be for the camera focal length
-// void scrollCallback([[maybe_unused]] GLFWwindow* window,[[maybe_unused]] double xoffset,[[maybe_unused]] double yoffset)
-// {
-//     err::log(LogLevel::INFO, "method not created yet");
-// }
+void Window::scrollCallback([[maybe_unused]] GLFWwindow* window,[[maybe_unused]] double xoffset,[[maybe_unused]] double yoffset)
+{
+    err::log(LogLevel::INFO, "method not created yet");
+}

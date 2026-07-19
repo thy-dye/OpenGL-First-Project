@@ -1,9 +1,14 @@
 #include "rendercontext.hpp"
 
+/****************************************************************************
+Constructor and Destructor
+*****************************************************************************
+*/
+
 RenderContext::RenderContext(Window& window, Camera& camera) : camera{camera} 
 {
     this->window = &window;
-    std::vector v = {GLFW_KEY_ESCAPE};
+    std::vector v = {GLFW_KEY_ESCAPE, GLFW_KEY_W, GLFW_KEY_A, GLFW_KEY_S, GLFW_KEY_D};
     window.addInput(v);
 }
 
@@ -13,10 +18,19 @@ RenderContext::~RenderContext()
 
 }
 
-//main render loop
+/****************************************************************************
+Member Functions
+*****************************************************************************
+*/
+
+void RenderContext::addObject(Object& o)
+{
+    objects.push_back(&o);
+}
+
+/***************** MAIN LOOP *****************/
 void RenderContext::renderLoop()
 {
-    // helper variables for time
     delta_t = glfwGetTime() - lastFrameTime;
     lastFrameTime = glfwGetTime();
 
@@ -31,12 +45,20 @@ void RenderContext::renderLoop()
         }
 
         auto map = window->getInputMap();
-        if (map[GLFW_KEY_ESCAPE]) { window->setClose(); }
+        if (map[GLFW_KEY_ESCAPE]) { 
+            window->setClose(); 
+            err::log(LogLevel::INFO, "Esc is pressed");
+        }
+
+        int temp = window->getModifiers();
+        if (temp & GLFW_MOD_SHIFT)   { err::log(LogLevel::INFO, "Shift is pressed");}
+        if (temp & GLFW_MOD_CONTROL) { err::log(LogLevel::INFO, "ctrl is pressed");}
         glfwPollEvents();
         render();
     }
 }
 
+// rendering function
 void RenderContext::render()
 {
     //opengl rendering
@@ -77,9 +99,4 @@ void RenderContext::render()
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     
     window->swapBuffer();
-}
-
-void RenderContext::addObject(Object& o)
-{
-    objects.push_back(&o);
 }
