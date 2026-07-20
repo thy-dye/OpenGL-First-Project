@@ -15,7 +15,7 @@ enum RenderContextState { WORLDSPACE, OBJECTSPACE };
 class RenderContext
 {
 public:
-    RenderContext(Window& window, Camera& camera);
+    RenderContext(Window& window, Camera& camera, int frameLimit=180);
     ~RenderContext();
 
     RenderContext(RenderContext&) = delete;
@@ -28,18 +28,18 @@ public:
     void renderLoop();
 
 //getter functions if i have more internal variables
-    double deltaTime()               { return delta_t; };
+    double deltaTime()               { return dt; };
     RenderContextState getState()    { return contextState; }
     CameraMode getCameraMode()       { return cameraMode; }
 
 private:
     void render();
     Window *window;
-    std::vector<Object*> objects;
+    std::vector<Object*> objects; //eventually change from a ptr to a unique ptr im not sure why as well can look into that
     Camera camera;
-    double lastFrameTime = 0, 
-           delta_t = 0;
-    
+    float lastFrameTime = 0, 
+           dt = 0;
+    int frameLimit;
     RenderContextState contextState = WORLDSPACE;
     CameraMode cameraMode = FLYMODE;
 

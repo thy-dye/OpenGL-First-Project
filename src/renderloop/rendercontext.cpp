@@ -5,7 +5,7 @@ Constructor and Destructor
 *****************************************************************************
 */
 
-RenderContext::RenderContext(Window& window, Camera& camera) : camera{camera} 
+RenderContext::RenderContext(Window& window, Camera& camera, int frameLimit) : camera{camera}, frameLimit{frameLimit} 
 {
     this->window = &window;
     std::vector v = {GLFW_KEY_ESCAPE, GLFW_KEY_W, GLFW_KEY_A, GLFW_KEY_S, GLFW_KEY_D};
@@ -31,11 +31,14 @@ void RenderContext::addObject(Object& o)
 /***************** MAIN LOOP *****************/
 void RenderContext::renderLoop()
 {
-    delta_t = glfwGetTime() - lastFrameTime;
-    lastFrameTime = glfwGetTime();
-
     while(!window->shouldClose()) 
     {
+        // get time frame
+        dt = glfwGetTime() - lastFrameTime;
+        lastFrameTime = glfwGetTime();
+    
+        err::log(LogLevel::INFO, std::to_string(dt));
+
         if (!ImGui::GetIO().WantCaptureKeyboard) { 
             window->processInputs();
         }
@@ -49,10 +52,26 @@ void RenderContext::renderLoop()
             window->setClose(); 
             err::log(LogLevel::INFO, "Esc is pressed");
         }
+        if (map[GLFW_KEY_W]) {
+            err::log(LogLevel::INFO, "W is pressed");
+            camera.pos += camera.cameraSpeed * camera.getForward() * dt;
+        } 
+        if (map[GLFW_KEY_S]) {
+            err::log(LogLevel::INFO, "S is pressed");
+            camera.pos -= camera.cameraSpeed * camera.getForward() * dt;
+        }
+        if (map[GLFW_KEY_D]) {
+            err::log(LogLevel::INFO, "D is pressed");
+            camera.pos += camera.cameraSpeed * camera.getRight() * dt;
+        }
+        if (map[GLFW_KEY_A]) {
+            err::log(LogLevel::INFO, "A is pressed");
+            camera.pos -= camera.cameraSpeed * camera.getRight() * dt;
+        }
 
-        int temp = window->getModifiers();
-        if (temp & GLFW_MOD_SHIFT)   { err::log(LogLevel::INFO, "Shift is pressed");}
-        if (temp & GLFW_MOD_CONTROL) { err::log(LogLevel::INFO, "ctrl is pressed");}
+        err::log(LogLevel::INFO, glm::to_string(camera.pos));
+        
+        [[maybe_unused]]int temp = window->getModifiers();
         glfwPollEvents();
         render();
     }
@@ -78,7 +97,7 @@ void RenderContext::render()
         glm::mat4 view = camera.lookAt();
 
         // projections
-        glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+        glm::mat4 projection = camera.perspectiveProjection();
 
         objects[i]->look->s->setMat4("model", model);
         objects[i]->look->s->setMat4("view", view);

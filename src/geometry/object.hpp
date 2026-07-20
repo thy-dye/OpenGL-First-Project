@@ -12,11 +12,11 @@ public:
 // inline const glm::quat& addRotation(const glm::quat& rot) {}
 // inline const glm::vec3& addScale(const glm::vec3& scale) {}
 
-const glm::vec3& getTranslation() { return origin; }
+const glm::vec3& getTranslation() { return pos; }
 const glm::quat& getRotation()    { return rotation; }
 const glm::vec3& getScale()       { return scale; }
 
-glm::vec3 origin;
+glm::vec3 pos;
 glm::quat rotation;
 glm::vec3 scale;
 Mesh* shape;
