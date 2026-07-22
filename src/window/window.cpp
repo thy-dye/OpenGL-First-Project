@@ -2,12 +2,13 @@
 
 // defining the static variable
 int Window::inputModifiersEvent = 0;
+Mouse Window::mouse{};
 
 /****************************************************************************
 Constructors and Destructor
 *****************************************************************************
 */
-Window::Window(int width, int height, int major=4, int minor=0)
+Window::Window(int width, int height, int major, int minor) 
 {
     // initialize glfw
     if (!glfwInit()) {
@@ -36,7 +37,7 @@ Window::Window(int width, int height, int major=4, int minor=0)
     
     //tell opengl how to size its viewport
     glViewport(0, 0, width, height);
-    // glfw callbacks
+    // glfw input callbacks
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
     glfwSetWindowSizeLimits(window, WIDTH, HEIGHT, GLFW_DONT_CARE, GLFW_DONT_CARE);
     glfwSetKeyCallback(window, processModifiers);
@@ -44,6 +45,10 @@ Window::Window(int width, int height, int major=4, int minor=0)
     // glfwSetInputMode(window, GLFW_STICKY_KEYS, GLFW_TRUE); // if you are going to use sticky keys might need to look into how to have a focused and unfocused window
     //TODO ADD SCROLL AND MOUSE
 
+    // glfw mouse callbacks
+    glfwSetCursorPosCallback(window, cursorPosCallBack);
+    glfwSetMouseButtonCallback(window, mouseButtonCallback);
+    glfwSetScrollCallback(window, mouseScrollCallback);
     //initialize dear imgui
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
@@ -103,12 +108,6 @@ void Window::clearInputs()
         iter->second = false;
     }
 }
-//todo
-void Window::processMouse() 
-{
-    // err::log(LogLevel::INFO, "method not created yet");
-}
-
 
 /* CALLBACK SECTION FOR GLFW */
 
@@ -125,8 +124,23 @@ void Window::processModifiers([[maybe_unused]] GLFWwindow* window, [[maybe_unuse
     else                                  { Window::inputModifiersEvent = 0; }
 }
 
-//todo the scroll callback should be for the camera focal length
-void Window::scrollCallback([[maybe_unused]] GLFWwindow* window,[[maybe_unused]] double xoffset,[[maybe_unused]] double yoffset)
+void Window::cursorPosCallBack([[maybe_unused]] GLFWwindow* window, double xpos, double ypos) 
 {
-    err::log(LogLevel::INFO, "method not created yet");
+    mouse.xoffset = static_cast<float>(xpos) - mouse.xpos;
+    mouse.yoffset = static_cast<float>(ypos) - mouse.ypos; 
+    mouse.xpos = static_cast<float>(xpos);
+    mouse.ypos = static_cast<float>(ypos);
+}
+
+void Window::mouseButtonCallback([[maybe_unused]] GLFWwindow* window, int button, int action, [[maybe_unused]]  int mods)
+{
+    if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) { mouse.rightMouseButton = true; }
+    else { mouse.rightMouseButton = false; }
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) { mouse.leftMouseButton = true; }
+    else { mouse.leftMouseButton = false; }
+}
+
+void Window::mouseScrollCallback([[maybe_unused]] GLFWwindow* window,[[maybe_unused]] double xoffset,[[maybe_unused]] double yoffset)
+{
+    mouse.yoffset = yoffset;
 }

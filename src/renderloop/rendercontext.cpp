@@ -37,41 +37,41 @@ void RenderContext::renderLoop()
         dt = glfwGetTime() - lastFrameTime;
         lastFrameTime = glfwGetTime();
     
-        err::log(LogLevel::INFO, std::to_string(dt));
-
         if (!ImGui::GetIO().WantCaptureKeyboard) { 
             window->processInputs();
         }
 
         if (!ImGui::GetIO().WantCaptureMouse) { 
-            window->processMouse();
+            //process mouse inputs if imgui doesnt use it
+            // 0.1f is the sensitivity
+            yaw   += window->getMouse().xoffset * 0.1f; 
+            pitch += window->getMouse().yoffset * 0.1f; 
+            if(pitch > 89.0f)  { pitch =  89.0f; }
+            if(pitch < -89.0f) { pitch = -89.0f; } 
+            dir.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+            dir.y = sin(glm::radians(pitch));
+            dir.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+            camera.forward = glm::normalize(dir);
         }
 
         auto map = window->getInputMap();
         if (map[GLFW_KEY_ESCAPE]) { 
             window->setClose(); 
-            err::log(LogLevel::INFO, "Esc is pressed");
         }
         if (map[GLFW_KEY_W]) {
-            err::log(LogLevel::INFO, "W is pressed");
             camera.pos += camera.cameraSpeed * camera.getForward() * dt;
         } 
         if (map[GLFW_KEY_S]) {
-            err::log(LogLevel::INFO, "S is pressed");
-            camera.pos -= camera.cameraSpeed * camera.getForward() * dt;
+            camera.pos += camera.cameraSpeed * -camera.getForward() * dt;
         }
         if (map[GLFW_KEY_D]) {
-            err::log(LogLevel::INFO, "D is pressed");
             camera.pos += camera.cameraSpeed * camera.getRight() * dt;
         }
         if (map[GLFW_KEY_A]) {
-            err::log(LogLevel::INFO, "A is pressed");
-            camera.pos -= camera.cameraSpeed * camera.getRight() * dt;
+            camera.pos += camera.cameraSpeed * -camera.getRight() * dt;
         }
-
-        err::log(LogLevel::INFO, glm::to_string(camera.pos));
         
-        [[maybe_unused]]int temp = window->getModifiers();
+        [[maybe_unused]]int mods = window->getModifiers();
         glfwPollEvents();
         render();
     }

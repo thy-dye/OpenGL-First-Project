@@ -43,5 +43,9 @@ private:
     RenderContextState contextState = WORLDSPACE;
     CameraMode cameraMode = FLYMODE;
 
+    //this is a temp space for these until i figure where to put them
+    glm::vec3 dir;
+    float yaw=-90.0f, pitch;
+
 };
 //todo add a sleep functionality and a framerate cap
