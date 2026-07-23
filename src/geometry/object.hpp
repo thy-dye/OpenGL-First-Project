@@ -5,6 +5,7 @@
 #include "../shaders/material.hpp"
 #include "../all.hpp"
 
+// make a virtual class eventually when working on the mesh class
 class Object {
 public:
 

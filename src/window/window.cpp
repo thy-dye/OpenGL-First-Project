@@ -1,13 +1,12 @@
 #include "window.hpp"
 
-// defining the static variable
+// defining the static variables
 int Window::inputModifiersEvent = 0;
 Mouse Window::mouse{};
 
 /****************************************************************************
 Constructors and Destructor
-*****************************************************************************
-*/
+*****************************************************************************/
 Window::Window(int width, int height, int major, int minor) 
 {
     // initialize glfw
@@ -43,12 +42,12 @@ Window::Window(int width, int height, int major, int minor)
     glfwSetKeyCallback(window, processModifiers);
     // pollable state of a key will remain GLFW_PRESS until the state of that key is polled with glfwGetKey
     // glfwSetInputMode(window, GLFW_STICKY_KEYS, GLFW_TRUE); // if you are going to use sticky keys might need to look into how to have a focused and unfocused window
-    //TODO ADD SCROLL AND MOUSE
-
     // glfw mouse callbacks
-    glfwSetCursorPosCallback(window, cursorPosCallBack);
     glfwSetMouseButtonCallback(window, mouseButtonCallback);
     glfwSetScrollCallback(window, mouseScrollCallback);
+    
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+
     //initialize dear imgui
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
@@ -70,8 +69,7 @@ Window::~Window()
 
 /****************************************************************************
 Member Functions
-*****************************************************************************
-*/
+*****************************************************************************/
 
 // add and remove to the input map
 int Window::addInput(std::vector<GLFWinput> input) 
@@ -108,8 +106,23 @@ void Window::clearInputs()
         iter->second = false;
     }
 }
+void Window::processMouse() 
+{
+    if (mouse.insideWindow) {
+        glfwGetCursorPos(window, &mouse.xpos, &mouse.ypos);
+        mouse.insideWindow = false;
+    }
+    else{
+        double xpos=mouse.xpos, ypos=mouse.ypos;
+        glfwGetCursorPos(window, &mouse.xpos, &mouse.ypos);
+        mouse.xoffset = mouse.xpos - xpos; // new - old 
+        mouse.yoffset = ypos - mouse.ypos; // y pos grows as we move down thats why its backwards
+    }
+}
 
-/* CALLBACK SECTION FOR GLFW */
+/****************************************************************************
+Callbacks for GLFW
+*****************************************************************************/
 
 // called when the window changes size
 void Window::framebufferSizeCallback([[maybe_unused]] GLFWwindow* window, int width, int height)
@@ -117,21 +130,14 @@ void Window::framebufferSizeCallback([[maybe_unused]] GLFWwindow* window, int wi
     glViewport(0, 0, width, height);
 }
 
-//called when any button is pressed or released
+// called when any button is pressed or released
 void Window::processModifiers([[maybe_unused]] GLFWwindow* window, [[maybe_unused]] int key, [[maybe_unused]] int scancode, int action, int mods)
 {
     if (mods > 0 && action == GLFW_PRESS) { Window::inputModifiersEvent |= mods; }
     else                                  { Window::inputModifiersEvent = 0; }
 }
 
-void Window::cursorPosCallBack([[maybe_unused]] GLFWwindow* window, double xpos, double ypos) 
-{
-    mouse.xoffset = static_cast<float>(xpos) - mouse.xpos;
-    mouse.yoffset = static_cast<float>(ypos) - mouse.ypos; 
-    mouse.xpos = static_cast<float>(xpos);
-    mouse.ypos = static_cast<float>(ypos);
-}
-
+// called when mouse buttons are clicked or released
 void Window::mouseButtonCallback([[maybe_unused]] GLFWwindow* window, int button, int action, [[maybe_unused]]  int mods)
 {
     if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) { mouse.rightMouseButton = true; }
@@ -140,6 +146,7 @@ void Window::mouseButtonCallback([[maybe_unused]] GLFWwindow* window, int button
     else { mouse.leftMouseButton = false; }
 }
 
+// called when scrolled on mouse
 void Window::mouseScrollCallback([[maybe_unused]] GLFWwindow* window,[[maybe_unused]] double xoffset,[[maybe_unused]] double yoffset)
 {
     mouse.yoffset = yoffset;

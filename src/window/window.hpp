@@ -15,9 +15,9 @@ using GLFWinput = int;
 // assumes a normal mouse with two buttons and one scroll wheel direction
 // when implementing graph edits will need to utilize glfwsetinputmode GLFW_CURSOR_HIDDEN for functionality 
 struct Mouse {
-    float xpos, ypos, xoffset, yoffset;
-    float yscrolloffset;
-    bool rightMouseButton, leftMouseButton;
+    double xpos, ypos, xoffset, yoffset;
+    double yscrolloffset;
+    bool rightMouseButton, leftMouseButton, insideWindow=true;
     
 };
 
@@ -46,22 +46,22 @@ public:
     int addInput(std::vector<GLFWinput> input);
     int removeInput(std::vector<GLFWinput> input);
 
-    //add a function to remove all inputs
+    // input functions
     void processInputs();
     void processMouse();
     void clearInputs();
     
-    // return a const reference to the current input map
+    // getter functions
     const std::unordered_map<GLFWinput, bool>& getInputMap() { return inputEvent; }
     int getModifiers() { return Window::inputModifiersEvent; }
     const Mouse& getMouse() { return mouse; }
+
 private:
     //static functions for callbacks
     //input callbacks
     static void framebufferSizeCallback(GLFWwindow* window, int width, int height);
     static void processModifiers(GLFWwindow* window, int key, int scancode, int action, int mods);
     //mouse callbacks
-    static void cursorPosCallBack(GLFWwindow* window, double xpos, double ypos);
     static void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
     static void mouseScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
     
@@ -71,7 +71,3 @@ private:
     GLFWwindow *window;
     static Mouse mouse;
 };
-
-//implement these as static methods for the callback
-//call backs for glfw defined in window.cpp
-//glfwSetWindowCloseCallback() //may be needed in the future

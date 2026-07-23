@@ -8,7 +8,7 @@ Constructor and Destructor
 RenderContext::RenderContext(Window& window, Camera& camera, int frameLimit) : camera{camera}, frameLimit{frameLimit} 
 {
     this->window = &window;
-    std::vector v = {GLFW_KEY_ESCAPE, GLFW_KEY_W, GLFW_KEY_A, GLFW_KEY_S, GLFW_KEY_D};
+    std::vector v = {GLFW_KEY_ESCAPE, GLFW_KEY_W, GLFW_KEY_A, GLFW_KEY_S, GLFW_KEY_D, GLFW_KEY_C};
     window.addInput(v);
 }
 
@@ -42,15 +42,23 @@ void RenderContext::renderLoop()
         }
 
         if (!ImGui::GetIO().WantCaptureMouse) { 
+            window->processMouse();
             //process mouse inputs if imgui doesnt use it
             // 0.1f is the sensitivity
-            yaw   += window->getMouse().xoffset * 0.1f; 
+            yaw   += window->getMouse().xoffset * 0.1f;  ///error has something to do with the permanent offset or something like that
             pitch += window->getMouse().yoffset * 0.1f; 
             if(pitch > 89.0f)  { pitch =  89.0f; }
             if(pitch < -89.0f) { pitch = -89.0f; } 
             dir.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
             dir.y = sin(glm::radians(pitch));
             dir.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+            err::log(INFO, std::to_string(window->getMouse().xpos) + " Pos x");
+            err::log(INFO, std::to_string(window->getMouse().ypos) + " Pos y");
+            err::log(INFO, std::to_string(window->getMouse().xoffset) + " Offset x");
+            err::log(INFO, std::to_string(window->getMouse().yoffset) + " Offset y");
+
+            err::log(INFO, glm::to_string(dir));
+            err::log(INFO, glm::to_string(camera.forward));
             camera.forward = glm::normalize(dir);
         }
 
@@ -70,7 +78,7 @@ void RenderContext::renderLoop()
         if (map[GLFW_KEY_A]) {
             camera.pos += camera.cameraSpeed * -camera.getRight() * dt;
         }
-        
+
         [[maybe_unused]]int mods = window->getModifiers();
         glfwPollEvents();
         render();
