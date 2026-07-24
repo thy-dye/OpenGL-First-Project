@@ -108,15 +108,28 @@ void Window::clearInputs()
 }
 void Window::processMouse() 
 {
-    if (mouse.insideWindow) {
-        glfwGetCursorPos(window, &mouse.xpos, &mouse.ypos);
-        mouse.insideWindow = false;
+    // if mouse is inside window get position
+    if (glfwGetWindowAttrib(window, GLFW_HOVERED)) {
+        if (mouse.wasOutside) { // mouse first time inside window
+            glfwGetCursorPos(window, &mouse.xpos, &mouse.ypos);
+            mouse.wasOutside = false;
+        }
+        else { // mouse is still inside window
+            double xpos=mouse.xpos, ypos=mouse.ypos;
+            glfwGetCursorPos(window, &mouse.xpos, &mouse.ypos);
+            mouse.xoffset = mouse.xpos - xpos; // new - old 
+            mouse.yoffset = ypos - mouse.ypos; // y pos grows as we move down thats why its backwards
+        }
+
+        if (glfwGetWindowAttrib(window, GLFW_FOCUSED)) {
+            isFocus = true;
+        }
+        else { isFocus = false; }
     }
-    else{
-        double xpos=mouse.xpos, ypos=mouse.ypos;
-        glfwGetCursorPos(window, &mouse.xpos, &mouse.ypos);
-        mouse.xoffset = mouse.xpos - xpos; // new - old 
-        mouse.yoffset = ypos - mouse.ypos; // y pos grows as we move down thats why its backwards
+    else {
+        mouse.xpos = mouse.ypos = -1;
+        mouse.xoffset = mouse.yoffset = 0;
+        mouse.wasOutside = true;
     }
 }
 
@@ -140,14 +153,16 @@ void Window::processModifiers([[maybe_unused]] GLFWwindow* window, [[maybe_unuse
 // called when mouse buttons are clicked or released
 void Window::mouseButtonCallback([[maybe_unused]] GLFWwindow* window, int button, int action, [[maybe_unused]]  int mods)
 {
-    if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) { mouse.rightMouseButton = true; }
-    else { mouse.rightMouseButton = false; }
-    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) { mouse.leftMouseButton = true; }
-    else { mouse.leftMouseButton = false; }
+    if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)  { mouse.rightMouseButton  = true;  }
+    else                                                            { mouse.rightMouseButton  = false; }
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)   { mouse.leftMouseButton   = true;  }
+    else                                                            { mouse.leftMouseButton   = false; }
+    if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_PRESS) { mouse.middleMouseButton = true;  }
+    else                                                            { mouse.middleMouseButton = false; }
 }
 
 // called when scrolled on mouse
 void Window::mouseScrollCallback([[maybe_unused]] GLFWwindow* window,[[maybe_unused]] double xoffset,[[maybe_unused]] double yoffset)
 {
-    mouse.yoffset = yoffset;
+    mouse.yscrolloffset = yoffset;
 }

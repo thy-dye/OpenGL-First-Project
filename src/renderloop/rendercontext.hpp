@@ -30,21 +30,26 @@ public:
 //getter functions if i have more internal variables
     double deltaTime()               { return dt; };
     RenderContextState getState()    { return contextState; }
-    CameraMode getCameraMode()       { return cameraMode; }
+    bool getCameraMode()             { return cameraMode; }
 
 private:
+    // private member functions
     void render();
+    void rotateCamera(bool cm);
+
     Window *window;
-    std::vector<Object*> objects; //eventually change from a ptr to a unique ptr im not sure why as well can look into that
-    Camera camera;
+    //eventually change from a ptr to a unique ptr im not sure why as well can look into that
+    std::vector<Object*> objects; 
     float lastFrameTime = 0, 
-           dt = 0;
+    dt = 0;
     int frameLimit;
     RenderContextState contextState = WORLDSPACE;
-    CameraMode cameraMode = FLYMODE;
-    PerspectiveMode perspectiveMode = PERSPECTIVE;
 
-    //this is a temp space for these until i figure where to put them
+    // data for the camera usage
+    // many functions rely on cameraMode so if the type changes to support more modes change those as well
+    bool cameraMode = FLYMODE;
+    Camera camera;
+    PerspectiveMode perspectiveMode = PERSPECTIVE;
     glm::vec3 dir;
     float yaw=-90.0f, pitch=0;
 

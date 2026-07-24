@@ -15,15 +15,14 @@ using GLFWinput = int;
 // assumes a normal mouse with two buttons and one scroll wheel direction
 // when implementing graph edits will need to utilize glfwsetinputmode GLFW_CURSOR_HIDDEN for functionality 
 struct Mouse {
-    double xpos, ypos, xoffset, yoffset;
+    double xpos, ypos, xoffset=0, yoffset=0;
     double yscrolloffset;
-    bool rightMouseButton, leftMouseButton, insideWindow=true;
+    bool rightMouseButton, leftMouseButton, middleMouseButton,
+        wasOutside=true;
     
 };
 
 /*Window Class
-Member Objects:
-map - Map for desired inputs to check
 */
 class Window {
 public:
@@ -45,6 +44,8 @@ public:
     void setClose() { glfwSetWindowShouldClose(window, GLFW_TRUE); }
     int addInput(std::vector<GLFWinput> input);
     int removeInput(std::vector<GLFWinput> input);
+    void setDisabledCursor() { glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); }
+    void setNormalCursor()   { glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL); }
 
     // input functions
     void processInputs();
@@ -55,10 +56,11 @@ public:
     const std::unordered_map<GLFWinput, bool>& getInputMap() { return inputEvent; }
     int getModifiers() { return Window::inputModifiersEvent; }
     const Mouse& getMouse() { return mouse; }
-
+    bool isFocused() { return isFocus; }
+    
 private:
     //static functions for callbacks
-    //input callbacks
+    //keyboard callbacks
     static void framebufferSizeCallback(GLFWwindow* window, int width, int height);
     static void processModifiers(GLFWwindow* window, int key, int scancode, int action, int mods);
     //mouse callbacks
@@ -66,6 +68,7 @@ private:
     static void mouseScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
     
     // better for larger datasets so we will leave as is for now but has worse cache locality
+    bool isFocus = false;
     static int inputModifiersEvent;
     std::unordered_map<GLFWinput, bool> inputEvent;
     GLFWwindow *window;

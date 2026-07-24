@@ -2,13 +2,12 @@
 
 /****************************************************************************
 Constructor and Destructor
-*****************************************************************************
-*/
+*****************************************************************************/
 
-RenderContext::RenderContext(Window& window, Camera& camera, int frameLimit) : camera{camera}, frameLimit{frameLimit} 
+RenderContext::RenderContext(Window& window, Camera& camera, int frameLimit) : frameLimit{frameLimit} , camera{camera}
 {
     this->window = &window;
-    std::vector v = {GLFW_KEY_ESCAPE, GLFW_KEY_W, GLFW_KEY_A, GLFW_KEY_S, GLFW_KEY_D, GLFW_KEY_C};
+    std::vector v = {GLFW_KEY_ESCAPE, GLFW_KEY_W, GLFW_KEY_A, GLFW_KEY_S, GLFW_KEY_D, GLFW_KEY_TAB};
     window.addInput(v);
 }
 
@@ -20,8 +19,7 @@ RenderContext::~RenderContext()
 
 /****************************************************************************
 Member Functions
-*****************************************************************************
-*/
+*****************************************************************************/
 
 void RenderContext::addObject(Object& o)
 {
@@ -43,41 +41,20 @@ void RenderContext::renderLoop()
 
         if (!ImGui::GetIO().WantCaptureMouse) { 
             window->processMouse();
-            //process mouse inputs if imgui doesnt use it
-            // 0.1f is the sensitivity
-            yaw   += window->getMouse().xoffset * 0.1f;  ///error has something to do with the permanent offset or something like that
-            pitch += window->getMouse().yoffset * 0.1f; 
-            if(pitch > 89.0f)  { pitch =  89.0f; }
-            if(pitch < -89.0f) { pitch = -89.0f; } 
-            dir.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-            dir.y = sin(glm::radians(pitch));
-            dir.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-            err::log(INFO, std::to_string(window->getMouse().xpos) + " Pos x");
-            err::log(INFO, std::to_string(window->getMouse().ypos) + " Pos y");
-            err::log(INFO, std::to_string(window->getMouse().xoffset) + " Offset x");
-            err::log(INFO, std::to_string(window->getMouse().yoffset) + " Offset y");
-
-            err::log(INFO, glm::to_string(dir));
-            err::log(INFO, glm::to_string(camera.forward));
-            camera.forward = glm::normalize(dir);
+            if (window->isFocused()) { //check if window is focused
+                rotateCamera(cameraMode);
+            }
         }
 
         auto map = window->getInputMap();
         if (map[GLFW_KEY_ESCAPE]) { 
             window->setClose(); 
         }
-        if (map[GLFW_KEY_W]) {
-            camera.pos += camera.cameraSpeed * camera.getForward() * dt;
-        } 
-        if (map[GLFW_KEY_S]) {
-            camera.pos += camera.cameraSpeed * -camera.getForward() * dt;
-        }
-        if (map[GLFW_KEY_D]) {
-            camera.pos += camera.cameraSpeed * camera.getRight() * dt;
-        }
-        if (map[GLFW_KEY_A]) {
-            camera.pos += camera.cameraSpeed * -camera.getRight() * dt;
-        }
+        if (map[GLFW_KEY_W]) { camera.pos += camera.cameraSpeed * camera.getForward() * dt; } 
+        if (map[GLFW_KEY_S]) { camera.pos += camera.cameraSpeed * -camera.getForward() * dt; }
+        if (map[GLFW_KEY_D]) { camera.pos += camera.cameraSpeed * camera.getRight() * dt; }
+        if (map[GLFW_KEY_A]) { camera.pos += camera.cameraSpeed * -camera.getRight() * dt; }
+        if (map[GLFW_KEY_TAB]) { cameraMode = !cameraMode; }
 
         [[maybe_unused]]int mods = window->getModifiers();
         glfwPollEvents();
@@ -85,7 +62,11 @@ void RenderContext::renderLoop()
     }
 }
 
-// rendering function
+/****************************************************************************
+Private functions
+*****************************************************************************/
+
+// actual fucntion to render
 void RenderContext::render()
 {
     //opengl rendering
@@ -135,4 +116,30 @@ void RenderContext::render()
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     
     window->swapBuffer();
+}
+
+void RenderContext::rotateCamera(bool cm) 
+{
+    if (cm == FLYMODE) {
+        window->setDisabledCursor();
+        yaw   += window->getMouse().xoffset * 0.1f;  ///error has something to do with the permanent offset or something like that
+        pitch += window->getMouse().yoffset * 0.1f; 
+        if(pitch > 89.0f)  { pitch =  89.0f; }
+        if(pitch < -89.0f) { pitch = -89.0f; } 
+        dir.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+        dir.y = sin(glm::radians(pitch));
+        dir.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+        err::log(INFO, std::to_string(window->getMouse().xpos) + " Pos x");
+        err::log(INFO, std::to_string(window->getMouse().ypos) + " Pos y");
+        err::log(INFO, std::to_string(window->getMouse().xoffset) + " Offset x");
+        err::log(INFO, std::to_string(window->getMouse().yoffset) + " Offset y");
+
+        err::log(INFO, glm::to_string(dir));
+        err::log(INFO, glm::to_string(camera.forward));
+        camera.forward = glm::normalize(dir);
+    }
+    else {
+        window->setNormalCursor();
+        err::log(INFO, "not implemented yet");
+    }
 }
