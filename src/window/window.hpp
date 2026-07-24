@@ -67,9 +67,9 @@ private:
     static void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
     static void mouseScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
     
-    // better for larger datasets so we will leave as is for now but has worse cache locality
     bool isFocus = false;
     static int inputModifiersEvent;
+    // better for larger datasets so we will leave as is for now but has worse cache locality
     std::unordered_map<GLFWinput, bool> inputEvent;
     GLFWwindow *window;
     static Mouse mouse;

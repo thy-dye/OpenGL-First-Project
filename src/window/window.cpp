@@ -109,9 +109,13 @@ void Window::clearInputs()
 void Window::processMouse() 
 {
     // if mouse is inside window get position
-    if (glfwGetWindowAttrib(window, GLFW_HOVERED)) {
+    err::log(INFO, std::to_string(glfwGetWindowAttrib(window, GLFW_HOVERED)) + " Window is Hovered");
+    err::log(INFO, std::to_string(glfwGetWindowAttrib(window, GLFW_FOCUSED)) + " Window is Focused");
+    err::log(INFO, std::to_string(isFocus) + " Window is focused custom logic");
+    if ((glfwGetWindowAttrib(window, GLFW_HOVERED) &&  mouse.leftMouseButton) || isFocus) {
         if (mouse.wasOutside) { // mouse first time inside window
             glfwGetCursorPos(window, &mouse.xpos, &mouse.ypos);
+            mouse.xoffset = mouse.yoffset = 0;
             mouse.wasOutside = false;
         }
         else { // mouse is still inside window
@@ -127,9 +131,8 @@ void Window::processMouse()
         else { isFocus = false; }
     }
     else {
-        mouse.xpos = mouse.ypos = -1;
-        mouse.xoffset = mouse.yoffset = 0;
         mouse.wasOutside = true;
+        isFocus = false;
     }
 }
 
