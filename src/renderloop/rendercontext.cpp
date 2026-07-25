@@ -34,29 +34,24 @@ void RenderContext::renderLoop()
         // get time frame
         dt = glfwGetTime() - lastFrameTime;
         lastFrameTime = glfwGetTime();
-    
+
+        auto map = window->getInputMap();
+
         if (!ImGui::GetIO().WantCaptureKeyboard) { 
-            window->processInputs();
+            processInputs();
+            window->clearInputs();
         }
 
         if (!ImGui::GetIO().WantCaptureMouse) { 
             window->processMouse();
             if (window->isFocused()) { //check if window is focused
+                window->setDisabledCursor();
                 rotateCamera(cameraMode);
             }
+            else {
+                window->setNormalCursor();
+            }
         }
-
-        auto map = window->getInputMap();
-        if (map[GLFW_KEY_ESCAPE]) { 
-            window->setClose(); 
-        }
-        if (map[GLFW_KEY_W]) { camera.pos += camera.cameraSpeed * camera.getForward() * dt; } 
-        if (map[GLFW_KEY_S]) { camera.pos += camera.cameraSpeed * -camera.getForward() * dt; }
-        if (map[GLFW_KEY_D]) { camera.pos += camera.cameraSpeed * camera.getRight() * dt; }
-        if (map[GLFW_KEY_A]) { camera.pos += camera.cameraSpeed * -camera.getRight() * dt; }
-        if (map[GLFW_KEY_TAB]) { cameraMode = !cameraMode; }
-
-        [[maybe_unused]]int mods = window->getModifiers();
         glfwPollEvents();
         render();
     }
@@ -117,11 +112,10 @@ void RenderContext::render()
     
     window->swapBuffer();
 }
-
+//handles the camera movement takes in current camera mode
 void RenderContext::rotateCamera(bool cm) 
 {
     if (cm == FLYMODE) {
-        window->setDisabledCursor();
         yaw   += window->getMouse().xoffset * 0.1f;  ///error has something to do with the permanent offset or something like that
         pitch += window->getMouse().yoffset * 0.1f; 
         if(pitch > 89.0f)  { pitch =  89.0f; }
@@ -129,17 +123,28 @@ void RenderContext::rotateCamera(bool cm)
         dir.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
         dir.y = sin(glm::radians(pitch));
         dir.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-        err::log(INFO, std::to_string(window->getMouse().xpos) + " Pos x");
-        err::log(INFO, std::to_string(window->getMouse().ypos) + " Pos y");
-        err::log(INFO, std::to_string(window->getMouse().xoffset) + " Offset x");
-        err::log(INFO, std::to_string(window->getMouse().yoffset) + " Offset y");
-
-        err::log(INFO, glm::to_string(dir));
-        err::log(INFO, glm::to_string(camera.forward));
         camera.forward = glm::normalize(dir);
     }
     else {
-        window->setNormalCursor();
         err::log(INFO, "not implemented yet");
     }
+}
+// handles all inputs
+void RenderContext::processInputs()
+{
+        auto map = window->getInputMap();
+        [[maybe_unused]]int mods = window->getModifiers();
+
+        if (map[GLFW_KEY_ESCAPE]) { 
+            window->setClose(); 
+        }
+        if (window->getKeyState(GLFW_KEY_W)) { camera.pos += camera.cameraSpeed * camera.getForward() * dt; } 
+        if (window->getKeyState(GLFW_KEY_S)) { camera.pos += camera.cameraSpeed * -camera.getForward() * dt; }
+        if (window->getKeyState(GLFW_KEY_D)) { camera.pos += camera.cameraSpeed * camera.getRight() * dt; }
+        if (window->getKeyState(GLFW_KEY_A)) { camera.pos += camera.cameraSpeed * -camera.getRight() * dt; }
+        
+        if (map[GLFW_KEY_TAB] == GLFW_PRESS) { 
+            cameraMode = !cameraMode; 
+        }
+
 }

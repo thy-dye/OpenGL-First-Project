@@ -36,6 +36,7 @@ private:
     // private member functions
     void render();
     void rotateCamera(bool cm);
+    void processInputs();
 
     Window *window;
     //eventually change from a ptr to a unique ptr im not sure why as well can look into that
