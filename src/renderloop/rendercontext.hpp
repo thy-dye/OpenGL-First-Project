@@ -35,7 +35,7 @@ public:
 private:
     // private member functions
     void render();
-    void rotateCamera(bool cm);
+    void cameraInputs(bool cm);
     void processInputs();
 
     Window *window;
@@ -52,7 +52,10 @@ private:
     Camera camera;
     PerspectiveMode perspectiveMode = PERSPECTIVE;
     glm::vec3 dir;
-    float yaw=-90.0f, pitch=0;
+    float yaw=-90.0f, pitch=0; 
+    float mouseSens  = 1.0f,
+          scrollSens = 2.0f;
+
 
 };
 //todo add a sleep functionality and a framerate cap

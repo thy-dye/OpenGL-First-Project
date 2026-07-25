@@ -1,6 +1,6 @@
 #include "window.hpp"
 
-// defining the static variables
+// defining the static variables for Window
 int Window::inputModifiersEvent = 0;
 Mouse Window::mouse{};
 std::unordered_map<GLFWinput, int> Window::inputMap;
@@ -20,7 +20,7 @@ Window::Window(int width, int height, int major, int minor)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, minor);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    window = glfwCreateWindow(width, height, "BENDECIDO", NULL, NULL);
+    window = glfwCreateWindow(width, height, "BENDITO", nullptr, nullptr);
 
     if (window == NULL) {
         err::log(LogLevel::CRIT, "Unable to create a GLFW window");
@@ -96,6 +96,10 @@ void Window::clearInputs()
         iter->second = false;
     }
 }
+void Window::clearMouseButtons() 
+{
+    mouse.leftMouseButton = mouse.middleMouseButton = mouse.rightMouseButton = 0;
+}
 
 void Window::processMouse() 
 {
@@ -116,7 +120,7 @@ void Window::processMouse()
         }
 
         if (glfwGetWindowAttrib(window, GLFW_FOCUSED)) {
-            isFocus = true;
+            isFocus = true; // custom isFocus variable that matches my needs
         }
         else { isFocus = false; }
     }
@@ -144,8 +148,6 @@ void Window::processModifiers([[maybe_unused]] GLFWwindow* window, [[maybe_unuse
 }
 void Window::processKeys([[maybe_unused]] GLFWwindow* window, int key, [[maybe_unused]] int scancode, int action, [[maybe_unused]] int mods)
 {
-    err::log(INFO, std::to_string(inputMap[key]));
-    err::log(INFO, std::to_string(key));
     if (inputMap.contains(key)) { inputMap[key] = action; }
 }
 

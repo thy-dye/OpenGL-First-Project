@@ -46,11 +46,13 @@ void RenderContext::renderLoop()
             window->processMouse();
             if (window->isFocused()) { //check if window is focused
                 window->setDisabledCursor();
-                rotateCamera(cameraMode);
+                cameraInputs(cameraMode);
             }
             else {
                 window->setNormalCursor();
             }
+            window->clearMouseButtons();
+            window->clearMouseScroll();
         }
         glfwPollEvents();
         render();
@@ -113,7 +115,7 @@ void RenderContext::render()
     window->swapBuffer();
 }
 //handles the camera movement takes in current camera mode
-void RenderContext::rotateCamera(bool cm) 
+void RenderContext::cameraInputs(bool cm) 
 {
     if (cm == FLYMODE) {
         yaw   += window->getMouse().xoffset * 0.1f;  ///error has something to do with the permanent offset or something like that
@@ -128,6 +130,10 @@ void RenderContext::rotateCamera(bool cm)
     else {
         err::log(INFO, "not implemented yet");
     }
+    err::log(INFO, std::to_string(window->getMouse().yscrolloffset) + " yscroll offset");
+    camera.fov -= window->getMouse().yscrolloffset * scrollSens; // decrease the fov so the object looks larger
+    if (camera.fov < 1.0f)  { camera.fov = 1.0f; } 
+    if (camera.fov > 90.0f) { camera.fov = 90.0f; }
 }
 // handles all inputs
 void RenderContext::processInputs()

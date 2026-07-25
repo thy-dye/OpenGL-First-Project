@@ -19,7 +19,6 @@ struct Mouse {
     double yscrolloffset;
     int rightMouseButton, leftMouseButton, middleMouseButton;
     bool wasOutside=true;
-    
 };
 
 /*
@@ -49,7 +48,9 @@ public:
     int addInput(const std::vector<GLFWinput>& input);
     int removeInput(const std::vector<GLFWinput>& input);
     void clearInputs();
-    
+    static void clearMouseButtons();
+    static void clearMouseScroll() { mouse.yscrolloffset = 0; }
+
         // cursor options
     void setDisabledCursor() { glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); }
     void setNormalCursor()   { glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL); }
